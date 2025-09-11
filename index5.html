@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Electronics</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Forms (Login/Register) */
+        .form-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .form-title {
+            color: #1a237e;
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #616161;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .btn-secondary:hover {
+            background-color: #c8e6c9;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Homepage */
+        #homepage {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .page-title {
+            color: #1a237e;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 5px;
+        }
+
+        .product-card p {
+            font-size: 1rem;
+            color: #757575;
+            margin: 0 0 15px;
+        }
+
+        .product-card .btn-buy {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 20px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .product-card .btn-buy:hover {
+            background-color: #218838;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #555;
+        }
+
+        .modal-content h2 {
+            color: #1a237e;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .payment-section, .shipping-details {
+            margin-bottom: 25px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .payment-options label {
+            flex-grow: 1;
+            background: #f0f4f7;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .payment-options label:hover {
+            background-color: #e0e6ec;
+        }
+
+        .payment-options input[type="radio"] {
+            display: none;
+        }
+
+        .payment-options input[type="radio"]:checked + label {
+            background-color: #d1e7dd;
+            border: 2px solid #28a745;
+        }
+
+        .btn-confirm {
+            background-color: #007bff;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-confirm:hover {
+            background-color: #0056b3;
+        }
+
+        .order-summary-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+        }
+
+        .order-summary-card .order-title {
+            color: #1a237e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="form-card" id="loginForm">
+            <h2 class="form-title">Welcome Back</h2>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <button class="btn btn-primary" id="loginBtn">Sign In</button>
+            <button class="btn btn-secondary" id="showRegisterBtn">Create New Account</button>
+            <div class="error" id="errorMsg"></div>
+        </div>
+
+        <div class="form-card" id="registerForm" style="display:none;">
+            <h2 class="form-title">Join Us</h2>
+            <div class="input-group">
+                <label for="regName">Full Name</label>
+                <input type="text" id="regName" placeholder="Your full name">
+            </div>
+            <div class="input-group">
+                <label for="regUsername">Username</label>
+                <input type="text" id="regUsername" placeholder="Choose a username">
+            </div>
+            <div class="input-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" placeholder="Create a password">
+            </div>
+            <div class="input-group">
+                <label for="regConfirm">Confirm Password</label>
+                <input type="password" id="regConfirm" placeholder="Confirm your password">
+            </div>
+            <button class="btn btn-primary" id="registerBtn">Register</button>
+            <div class="error" id="regErrorMsg"></div>
+        </div>
+
+        <div id="homepage" style="display: none;">
+            <header>
+                <h1 class="page-title">Shop Our Latest Electronics</h1>
+            </header>
+            <div class="product-grid" id="productGrid"></div>
+            
+            <div id="order-details" class="order-summary-card" style="display: none;">
+                <h2 class="order-title">Your Order Summary</h2>
+                <p id="order-summary"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2 id="buyProductName"></h2>
+            <p class="product-price" id="buyProductPrice"></p>
+            
+            <div class="payment-section">
+                <h3>Select Payment Method</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="payment" value="Paytm" required>
+                        <span>Paytm</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="PhonePe">
+                        <span>PhonePe</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="QR">
+                        <span>QR Scanner</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="COD">
+                        <span>Cash on Delivery</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="shipping-details">
+                <h3>Enter Your Details</h3>
+                <input type="text" id="buyerName" placeholder="Full Name" required>
+                <input type="text" id="buyerAddress" placeholder="Address" required>
+                <input type="text" id="buyerPhone" placeholder="Phone Number" required>
+                <button class="btn btn-confirm" id="confirmPurchaseBtn">Confirm Purchase</button>
+                <p id="purchaseStatus"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cache DOM elements for efficiency
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const homepage = document.getElementById("homepage");
+        const buyModal = document.getElementById("buyModal");
+        const orderDetailsSection = document.getElementById("order-details");
+        const orderSummary = document.getElementById("order-summary");
+
+        const loginBtn = document.getElementById("loginBtn");
+        const showRegisterBtn = document.getElementById("showRegisterBtn");
+        const registerBtn = document.getElementById("registerBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const confirmPurchaseBtn = document.getElementById("confirmPurchaseBtn");
+
+        let currentProduct = null;
+
+        // Event Listeners
+        loginBtn.addEventListener("click", validateLogin);
+        showRegisterBtn.addEventListener("click", showRegisterForm);
+        registerBtn.addEventListener("click", registerUser);
+        closeModalBtn.addEventListener("click", closeBuyModal);
+        confirmPurchaseBtn.addEventListener("click", completePurchase);
+
+        // Initialize application on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadProducts();
+        });
+
+        // Authentication Functions
+        function validateLogin() {
+            const user = document.getElementById("username").value.trim();
+            const pass = document.getElementById("password").value.trim();
+            const errorMsg = document.getElementById("errorMsg");
+
+            const storedUser = localStorage.getItem("registeredUser");
+            const storedPass = localStorage.getItem("registeredPass");
+
+            if (user === storedUser && pass === storedPass) {
+                loginForm.style.display = "none";
+                homepage.style.display = "block";
+            } else {
+                errorMsg.textContent = "Invalid username or password!";
+            }
+        }
+
+        function showRegisterForm() {
+            loginForm.style.display = "none";
+            registerForm.style.display = "block";
+        }
+
+        function registerUser() {
+            const name = document.getElementById("regName").value.trim();
+            const user = document.getElementById("regUsername").value.trim();
+            const pass = document.getElementById("regPassword").value.trim();
+            const confirm = document.getElementById("regConfirm").value.trim();
+            const errorMsg = document.getElementById("regErrorMsg");
+
+            if (!name || !user || !pass || !confirm) {
+                errorMsg.textContent = "All fields are required.";
+                return;
+            }
+            if (pass !== confirm) {
+                errorMsg.textContent = "Passwords do not match.";
+                return;
+            }
+
+            localStorage.setItem("registeredUser", user);
+            localStorage.setItem("registeredPass", pass);
+
+            alert("Account created successfully! Please sign in.");
+            registerForm.style.display = "none";
+            loginForm.style.display = "block";
+        }
+
+        // Product & Purchase Functions
+        function loadProducts() {
+            const products = [
+                { id: 1, name: "Smartphone X1", price: 14999, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=150&q=80" },
+                { id: 2, name: "Laptop Pro", price: 59999, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=150&q=80" },
+                { id: 3, name: "Bluetooth Speaker", price: 2999, image: "https://images.unsplash.com/photo-1629251842777-a8e5b4f6b64f?auto=format&fit=crop&w=150&q=80" }, // Updated image
+                { id: 4, name: "Smartwatch S2", price: 4999, image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=150&q=80" },
+                { id: 5, name: "Wireless Earbuds", price: 1999, image: "https://images.unsplash.com/photo-1622352220677-27b4097f4c9c?auto=format&fit=crop&w=150&q=80" } // Updated image
+            ];
+
+            const grid = document.getElementById("productGrid");
+            grid.innerHTML = "";
+
+            products.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "product-card";
+
+                const img = document.createElement("img");
+                img.src = p.image;
+                img.alt = p.name;
+                
+                // Add an image generation tag here for each product card
+                // The actual image will be provided by the image generation model.
+                // For a presentation, this will simulate dynamic image loading.
+                // You can add a prompt here that describes what you want.
+                // Example: <img src="data:image/png;base64,..." alt="Image of ${p.name}">
+                // For this example, I'll use placeholders that the image model will replace.
+                if (p.name === "Smartphone X1") {
+                    img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`; // Placeholder
+                } else if (p.name === "Laptop Pro") {
+                    img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`; // Placeholder
+                } else if (p.name === "Bluetooth Speaker") {
+                    img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`; // Placeholder
+                } else if (p.name === "Smartwatch S2") {
+                    img.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`; // Placeholder
+                } else if (p.name === "Wireless Earbuds") {
+                    img.src = `data:image/png;base64,iVBORw0KGgoAAAANSohueAAAAAAAAAAAAADaR92dAAABXWlDQ1BwaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj33wACTFEdEEOOwdIEQcEGDzIuIIxtgBHhUVqnguXjYChhUXQoYmYfgMyUvWECAEEOEijfhzbSJMzFDFffyIQpbyfMufzB7ZgCLBAgFCJaQIAEEBysDcWJMUPwjgIAPEYAOHhLCAkLWQ5fOKQAGAEBHXHLJgAZkCBPB8+uEEAAAHLmJyitxpfipUABXgCezAYgXoXQEEQDBuAIQmsdjsYBDk+kNPg+sBQAH/xXy5/kRz0a+8oDqQ/ZFP0zsD9LBLQjCgEw/tG0FGj/xcPz0/cAAACgDSHpAPLhQAAAABJRU5ErkJggg==`; // Placeholder
+                }
+
+
+                const name = document.createElement("h3");
+                name.textContent = p.name;
+
+                const price = document.createElement("p");
+                price.textContent = `₹${p.price.toLocaleString('en-IN')}`;
+
+                const button = document.createElement("button");
+                button.className = "btn btn-buy";
+                button.textContent = "Buy Now";
+                button.addEventListener("click", () => openBuyModal(p));
+
+                card.append(img, name, price, button);
+                grid.appendChild(card);
+            });
+             
+             // This will insert images into the product cards.
+             // Smartphone X1: 
+             // Laptop Pro: 
+             // Bluetooth Speaker: 
+             // Smartwatch S2: 
+             // Wireless Earbuds: 
+        }
+
+        function openBuyModal(product) {
+            currentProduct = product;
+            document.getElementById("buyProductName").textContent = product.name;
+            document.getElementById("buyProductPrice").textContent = `Price: ₹${product.price.toLocaleString('en-IN')}`;
+            buyModal.style.display = "flex";
+        }
+
+        function closeBuyModal() {
+            buyModal.style.display = "none";
+        }
+
+        function completePurchase() {
+            const name = document.getElementById("buyerName").value.trim();
+            const address = document.getElementById("buyerAddress").value.trim();
+            const phone = document.getElementById("buyerPhone").value.trim();
+            const paymentMethod = document.querySelector('input[name="payment"]:checked');
+            const purchaseStatus = document.getElementById("purchaseStatus");
+
+            if (!name || !address || !phone || !paymentMethod) {
+                purchaseStatus.textContent = "Please fill in all details and select a payment method.";
+                purchaseStatus.style.color = "red";
+                return;
+            }
+
+            orderDetailsSection.style.display = "block";
+            orderSummary.innerHTML = `
+                <strong>Order Placed Successfully! 🎉</strong><br><br>
+                <strong>Product:</strong> ${currentProduct.name}<br>
+                <strong>Price:</strong> ₹${currentProduct.price.toLocaleString('en-IN')}<br>
+                <strong>Name:</strong> ${name}<br>
+                <strong>Address:</strong> ${address}<br>
+                <strong>Phone:</strong> ${phone}<br>
+                <strong>Payment Method:</strong> ${paymentMethod.value}
+            `;
+
+            purchaseStatus.textContent = "Purchase successful! Your order has been placed.";
+            purchaseStatus.style.color = "green";
+            
+            setTimeout(() => {
+                closeBuyModal();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
